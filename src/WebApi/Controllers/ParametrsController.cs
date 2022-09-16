@@ -6,6 +6,7 @@ using OwenioNet;
 using OwenioNet.DataConverter.Converter;
 using OwenioNet.Types;
 using System;
+using Application.Common.Exceptions;
 using OwenioNet.Log;
 
 namespace WebApi.Controllers
@@ -22,6 +23,7 @@ namespace WebApi.Controllers
             using (var owenProtocol = OwenProtocolMaster
                        .Create(serialPort))
             {
+                throw new Exception("Не удалось открыть порт");
                 if (!serialPort.IsOpen) serialPort.Open();
 
 
@@ -35,6 +37,8 @@ namespace WebApi.Controllers
                 var data = Encoding.UTF8.GetBytes(r.ToString());
                 serialPort.Close();
                 serialPort.Dispose();
+                
+                owenProtocol.CloseSerialPort();
                 return (int)r;
             }
         }

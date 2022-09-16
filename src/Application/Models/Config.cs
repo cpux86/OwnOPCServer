@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Modeles
 {
-    public class Configuration : IConfiguration
+    public class Config : IConfig
     {
         public string PortName { get; set; } = string.Empty;
         public int BaudRate { get; set; }

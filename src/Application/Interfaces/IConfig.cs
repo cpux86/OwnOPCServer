@@ -3,7 +3,7 @@
 namespace Application.Interfaces;
 using Application.Modeles;
 
-public interface IConfiguration
+public interface IConfig
 {
     /// <summary>
     /// Имя com порта
