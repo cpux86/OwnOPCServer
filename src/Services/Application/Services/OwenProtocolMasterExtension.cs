@@ -12,6 +12,7 @@ namespace Application.Services
 {
     public static class OwenProtocolMasterExtension
     {
+
         /// <summary>
         /// Возвращает текущие показания счетчика
         /// </summary>
@@ -19,15 +20,21 @@ namespace Application.Services
         /// <param name="address"></param>
         /// <param name="addressLength"></param>
         /// <returns></returns>
-        public static async Task<double> OwenReadCEU(this IOwenProtocolMaster protocolMaster, int address, AddressLengthType addressLength = AddressLengthType.Bits8)
+        public static async Task<string> OwenReadCEU(this IOwenProtocolMaster protocolMaster, int address, AddressLengthType addressLength = AddressLengthType.Bits8)
         {
-            byte[] response = null;
-            response = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "CEU");
+            // получаю положение десятичной точки
+            var dp = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "dP");
+
+            // получаю массив байт содержащий заначение счетчика в физических еденицах
+            var ceu = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "CEU");
 
             // конвертируем результат запроса в читаемый вид, показаний счетчика
-            var meterReadings = new ConverterDecDotS().ConvertBack(response).AsDouble();
-            var res = Convert.ToSingle(meterReadings);
-            return await Task.FromResult(Convert.ToSingle(meterReadings));
+            var mantissa = new ConverterU().ConvertBack(ceu);
+
+            // преобразуем мантиссу в число с плавающей точкой
+            var result = ((float)new FixedPoint(mantissa, dp[1], false));
+
+            return await Task.FromResult(result.ToString());
         }
 
     }
