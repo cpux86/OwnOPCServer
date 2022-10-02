@@ -7,43 +7,62 @@ using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Modeles;
 using OwenioNet.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+
+//using Microsoft.Extensions.Options;
 
 namespace Application.Services
 {
 
     public class CounterService : ICounter
     {
+        private readonly IOptionsMonitor<Config> _options;
+
+        public CounterService(IOptionsMonitor<Config> options)
+        {
+            _options = options;
+            _options.OnChange(evert =>
+            {
+                Console.WriteLine("конфигурация изменена");
+            });
+            
+        }
+
         /// <summary>
         /// Возвращает текущее показания счетчика 
         /// </summary>
         /// <returns></returns>
-        public async Task<string> GetCurrentMeterReadings()
+        public async Task<string> GetCurrentMeterReadings(int addr)
         {
-            var port = "com3";
-            var baudRate = 9600;
-            var addr = 3;
+            var config = _options.CurrentValue;
 
-            var serialPort = new SerialPort(port, baudRate, Parity.None, 6, StopBits.One);
-            //var serialPort = new SerialPort();
+            var serialPort = new SerialPort(config.Port, config.BaudRate, Parity.None, 6, StopBits.One);
+
             using (var owenProtocol = OwenProtocolMaster
                        .Create(serialPort))
             {
 
                 try
                 {
-                    if (!serialPort.IsOpen)
-                        serialPort.Open();
+                    serialPort.WriteTimeout = config.RWTimeout;
+                    serialPort.WriteTimeout = config.RWTimeout;
+
+                    if (!serialPort.IsOpen) serialPort.Open();
                 }
                 catch (Exception e)
                 {
                     throw new OpenPortFiledException(e.Message);
                 }
-
+                // время ожидания ответа от счетчика
                 owenProtocol.Transport.ReadTimeout = 1000;
+                owenProtocol.Transport.WriteTimeout = 1000;
 
                 return await owenProtocol.OwenReadCEU(addr);
             }

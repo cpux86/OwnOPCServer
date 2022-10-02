@@ -8,7 +8,7 @@ public interface IConfig
     /// <summary>
     /// Имя com порта
     /// </summary>
-    public string PortName { get; set; }
+    public string Port { get; set; }
     /// <summary>
     /// Скорость порта
     /// </summary>

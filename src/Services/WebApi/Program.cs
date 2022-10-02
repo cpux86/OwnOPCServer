@@ -1,12 +1,27 @@
 
+using System.Runtime.CompilerServices;
 using Application;
+using Application.Services;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.IdentityModel.Tokens;
 using WebApi.Middleware;
-var builder = WebApplication.CreateBuilder(args);
-//Console.WriteLine(args[0]);
+
+
+var options = new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = WindowsServiceHelpers.IsWindowsService()
+        ? AppContext.BaseDirectory : default
+};
+
+var builder = WebApplication.CreateBuilder(options);
+builder.Configuration.AddJsonFile("config.json",true,true);
+//builder.Configuration.AddYamlFile("config.yml", true, true);
+
 // Add services to the container.
 
 
@@ -14,7 +29,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddApplication();
+
+builder.Services.AddApplication(builder.Configuration);
 
 builder.Services.AddCors(options =>
     {
@@ -44,6 +60,8 @@ builder.Services.AddCors(options =>
 //    });
 
 
+
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -57,6 +75,7 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+builder.Host.UseWindowsService();
 
 
 var app = builder.Build();

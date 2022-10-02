@@ -8,7 +8,6 @@ namespace Application.Models
 {
     public class OwnCounter
     {
-        //public string MachineName { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Address { get; set; }
     }

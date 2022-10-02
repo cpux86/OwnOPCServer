@@ -12,6 +12,6 @@ namespace Application.Interfaces
         /// Возвращает текущее значение счетчика
         /// </summary>
         /// <returns></returns>
-        public Task<string> GetCurrentMeterReadings();
+        public Task<string> GetCurrentMeterReadings(int address);
     }
 }
