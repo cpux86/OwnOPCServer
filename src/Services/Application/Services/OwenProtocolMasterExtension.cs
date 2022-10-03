@@ -24,16 +24,43 @@ namespace Application.Services
         public static async Task<string> OwenReadCEU(this IOwenProtocolMaster protocolMaster, int address, AddressLengthType addressLength = AddressLengthType.Bits8)
         {
             // получаю положение десятичной точки
-            var dp = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "dP");
+            var decPoint = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "dP");
 
-            // получаю массив байт содержащий заначение счетчика в физических еденицах
+            // получаю массив байт содержащий значение счетчика в физических единицах
+            var ceu = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "CEU");
+
+            // lock счетчик
+            protocolMaster.OwenWrite(address, AddressLengthType.Bits8, "LoCK", new byte[] { 0x0, 0x2 });
+
+            // конвертируем результат запроса в читаемый вид, показаний счетчика
+            var mantissa = new ConverterU().ConvertBack(ceu);
+
+            // преобразуем мантиссу в число с плавающей точкой
+            var result = ((float)new FixedPoint(mantissa, decPoint[1], false));
+
+            return await Task.FromResult(result.ToString());
+        }
+
+
+        public static async Task<string> OwenResetCEU(this IOwenProtocolMaster protocolMaster, int address, AddressLengthType addressLength = AddressLengthType.Bits8)
+        {
+            // получаю положение десятичной точки
+            var decPoint = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "dP");
+
+            // сбрасываю счетчик
+            protocolMaster.OwenWrite(address, AddressLengthType.Bits8, "rStC", new byte[] { 0x1 });
+
+            // блокировка кнопок 
+            protocolMaster.OwenWrite(address, AddressLengthType.Bits8, "LoCK", new byte[] {0x0, 0x3 });
+
+            // получаю массив байт содержащий значение счетчика в физических единицах
             var ceu = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "CEU");
 
             // конвертируем результат запроса в читаемый вид, показаний счетчика
             var mantissa = new ConverterU().ConvertBack(ceu);
 
             // преобразуем мантиссу в число с плавающей точкой
-            var result = ((float)new FixedPoint(mantissa, dp[1], false));
+            var result = ((float)new FixedPoint(mantissa, decPoint[1], false));
 
             return await Task.FromResult(result.ToString());
         }

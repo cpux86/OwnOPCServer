@@ -13,13 +13,7 @@ namespace WebApi.Controllers
     public class CounterController : ControllerBase
     {
         private readonly ICounter _counter;
-        // private  readonly IConfig _config;
 
-        //public CounterController(ICounter counter, IConfig config)
-        //{
-        //    _counter = counter;
-        //    _config = config;
-        //}
         public CounterController(ICounter counter)
         {
             _counter = counter;
@@ -27,11 +21,22 @@ namespace WebApi.Controllers
 
         [HttpGet()]
         //[Route("{car}/meter-readings")]
-        [Route("meter-readings/{address:int}")]
+        //[Route("raw/meter-readings/{address:int}")]
         //[Authorize]
+        [Route("raw/{address:int}")]
         public async Task<string> GetCurrentMeterReadings(int address)
         {
             return await _counter.GetCurrentMeterReadings(address);
+        }
+
+        [HttpGet()]
+        //[Route("{car}/meter-readings")]
+        [Route("raw/{address:int}/reset")]
+        //[Authorize]
+        public async Task<string> ResetAndGetCurrentMeterReadings(int address)
+        {
+
+            return await _counter.ResetAndGetCurrentMeterReadings(address);
         }
     }
 }

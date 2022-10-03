@@ -13,5 +13,8 @@ namespace Application.Interfaces
         /// </summary>
         /// <returns></returns>
         public Task<string> GetCurrentMeterReadings(int address);
+
+        public Task<string> ResetAndGetCurrentMeterReadings(int address);
+        
     }
 }

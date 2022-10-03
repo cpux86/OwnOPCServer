@@ -67,5 +67,38 @@ namespace Application.Services
                 return await owenProtocol.OwenReadCEU(addr);
             }
         }
+
+        /// <summary>
+        /// Возвращает текущее показания счетчика 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> ResetAndGetCurrentMeterReadings(int addr)
+        {
+            var config = _options.CurrentValue;
+
+            var serialPort = new SerialPort(config.Port, config.BaudRate, Parity.None, 6, StopBits.One);
+
+            using (var owenProtocol = OwenProtocolMaster
+                       .Create(serialPort))
+            {
+
+                try
+                {
+                    serialPort.WriteTimeout = config.RWTimeout;
+                    serialPort.WriteTimeout = config.RWTimeout;
+
+                    if (!serialPort.IsOpen) serialPort.Open();
+                }
+                catch (Exception e)
+                {
+                    throw new OpenPortFiledException(e.Message);
+                }
+                // время ожидания ответа от счетчика
+                owenProtocol.Transport.ReadTimeout = 1000;
+                owenProtocol.Transport.WriteTimeout = 1000;
+
+                return await owenProtocol.OwenResetCEU(addr);
+            }
+        }
     }
 }

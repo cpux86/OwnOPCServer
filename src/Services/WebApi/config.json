@@ -1,6 +1,6 @@
 {
   "SerialPortSetting": {
-    "Port": "COM8",
+    "Port": "COM7",
     "BaudRate": 9600
   }
 }
