@@ -1,4 +1,5 @@
-﻿using WebApi.Middleware;
+﻿using Microsoft.AspNetCore.Builder;
+using WebApi.Middleware;
 
 namespace WebApi.Middleware
 {

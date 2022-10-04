@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using Application.Common.Exceptions;
+using Microsoft.AspNetCore.Http;
 using WebApi.Wrappers;
 
 namespace WebApi.Middleware
