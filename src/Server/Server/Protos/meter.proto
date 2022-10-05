@@ -1,0 +1,21 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "MeterServer";
+
+package meter;
+
+service Meter
+{
+    rpc Save (MetlerReadingRequest) returns (MetlerReadingResponce);
+}
+
+message MetlerReadingRequest
+{
+    string client_id = 1;
+    string value = 2;
+}
+
+message MetlerReadingResponce
+{
+    string status = 1;
+}
