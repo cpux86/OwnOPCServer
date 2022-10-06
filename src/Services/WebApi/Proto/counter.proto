@@ -1,0 +1,16 @@
+﻿syntax = "proto3";
+//option csharp_namespace = CounterApi;
+
+package CounterApi;
+
+message CounterOptionsRequest {
+	int32 address = 2;
+}
+
+message MeterReadingsResponce {
+	string value = 1;
+}
+
+service Counter {
+	rpc GetMeterReadingsByAddressCounter (CounterOptionsRequest) returns (stream MeterReadingsResponce);
+}

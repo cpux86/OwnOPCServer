@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.IdentityModel.Tokens;
+using WebApi.Grpc;
 using WebApi.Middleware;
 
 var options = new WebApplicationOptions
@@ -43,12 +44,13 @@ builder.Configuration.AddJsonFile("config.json",true,true);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-//builder.Services.AddGrpc();
+builder.Services.AddGrpc();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication(builder.Configuration);
+
 
 builder.Services.AddCors(options =>
     {
@@ -104,7 +106,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseCustomExceptionHandler();
 //app.UseHttpsRedirection();
 app.UseRouting();
@@ -112,7 +113,7 @@ app.UseRouting();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapGrpcService<CounterGrpcService>();
 app.MapControllers();
 
 app.Run();
