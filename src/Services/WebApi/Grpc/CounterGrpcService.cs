@@ -25,7 +25,7 @@ namespace WebApi.Grpc
             {
                 try
                 {
-                    await responseStream.WriteAsync(new MeterReadingsResponce { Value = Service.ServiceA.value });
+                    await responseStream.WriteAsync(new MeterReadingsResponce { Value = Service.OwenMonitor.value });
 
                     await Task.Delay(10);
                 }

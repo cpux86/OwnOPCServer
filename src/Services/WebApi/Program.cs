@@ -25,7 +25,7 @@ var options = new WebApplicationOptions
 var builder = WebApplication.CreateBuilder(options);
 builder.Configuration.AddJsonFile("config.json",true,true);
 
-builder.Services.AddHostedService<ServiceA>();
+builder.Services.AddHostedService<OwenMonitor>();
 
 //builder.WebHost.UseUrls("http://localhost:8888");
 
