@@ -63,8 +63,7 @@ namespace Application.Services
                 // время ожидания ответа от счетчика
                 owenProtocol.Transport.ReadTimeout = 1000;
                 owenProtocol.Transport.WriteTimeout = 1000;
-
-                return await owenProtocol.OwenReadCEU(addr);
+                return  owenProtocol.OwenReadCEU(addr);
             }
         }
 

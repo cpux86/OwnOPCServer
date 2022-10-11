@@ -23,10 +23,18 @@ namespace WebApi.Grpc
         {
             for (int i = 0; i < 10000; i++)
             {
-                await responseStream.WriteAsync(new MeterReadingsResponce { Value = i.ToString() });
+                try
+                {
+                    await responseStream.WriteAsync(new MeterReadingsResponce { Value = Service.ServiceA.value });
 
+                    await Task.Delay(10);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
 
-                await Task.Delay(1);
+                }
+                
             }
 
             

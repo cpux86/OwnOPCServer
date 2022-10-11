@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.IdentityModel.Tokens;
 using WebApi.Grpc;
 using WebApi.Middleware;
+using WebApi.Service;
 
 var options = new WebApplicationOptions
 {
@@ -23,6 +24,8 @@ var options = new WebApplicationOptions
 
 var builder = WebApplication.CreateBuilder(options);
 builder.Configuration.AddJsonFile("config.json",true,true);
+
+builder.Services.AddHostedService<ServiceA>();
 
 //builder.WebHost.UseUrls("http://localhost:8888");
 

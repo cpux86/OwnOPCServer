@@ -21,7 +21,7 @@ namespace Application.Services
         /// <param name="address"></param>
         /// <param name="addressLength"></param>
         /// <returns></returns>
-        public static async Task<string> OwenReadCEU(this IOwenProtocolMaster protocolMaster, int address, AddressLengthType addressLength = AddressLengthType.Bits8)
+        public static string OwenReadCEU(this IOwenProtocolMaster protocolMaster, int address, AddressLengthType addressLength = AddressLengthType.Bits8)
         {
             // получаю положение десятичной точки
             var decPoint = protocolMaster.OwenRead(address, AddressLengthType.Bits8, "dP");
@@ -38,7 +38,7 @@ namespace Application.Services
             // преобразуем мантиссу в число с плавающей точкой
             var result = ((float)new FixedPoint(mantissa, decPoint[1], false));
 
-            return await Task.FromResult(result.ToString());
+            return result.ToString();
         }
 
 
